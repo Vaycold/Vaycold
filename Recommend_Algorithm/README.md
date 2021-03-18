@@ -35,5 +35,16 @@ ___
     + 각 단어에 가중치를 부여하여 Keyword Extraction 등에 활용
     + TF : 단어 w가 문서 d에 등장한 빈도 수
     + DF : 단어 W가 등장한 문서 d의 수
-    + 
+  - 컨텐츠 유사도는 cosine similarity 사용
+  - 성능평가 방법 : RMSE
+    + RMSE 값 : 1.18
+  - 결과
+    + 성능이 눈에 띄게 좋아지지 않음
+    + 어떤 Feature를 사용하느냐가 핵심인 것 같다.
+  - Self FEEDBACK
+    + List comprehension 공부를 더 해야 될 것 같다... list comprehension 내 이중 for 문 구문도 연습해야겠다.
+    + 데이터를 원하는 방식대로 가공하는 연습이 필요한 것 같다.
+___
 
+### #4. 이웃기반 협업필터링
+  - 
