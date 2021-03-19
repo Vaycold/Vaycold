@@ -56,3 +56,23 @@ ___
     + 유저 기반   : 1.69
   - Self FEEDBACK
     + loc, apply, unstack 용법 등에 대해 다시 한번 확인해볼 필요가 있다.
+ ___
+
+### #5. 모델기반_협업필터링 및 Matrix_Factorization
+  - 특이값 분해(SVD)를 활용한 Latent factor 활용
+    + 이 때 hyperparameter : K
+  - matrix_factorization library 활용
+  - 결과
+    + 아이템 기반 : 0.82
+    + 유저 기반   : 0.85
+  - Self FEEDBACK
+    + np.linalg.svd 사용법을 익히자
+ ___
+
+### #6. 모델기반 협업필터링 및 협업필터링 성능 비교 분석
+  - SGD 구현 및 optimizer 알고리즘 구현
+  - 결과
+    + __movie lens 데이터는 *아이템 기반으로 모델링*을 하는 것이 다른 모델보다 더 우세한 결과가 도출되는 것으로 보인다.__
+  - Self FEEDBACK
+    + 각 방법이 확실하다 라는 정답은 없다
+    + 여러 모델들을 구현하고 여러번의 시도를 해서 최적의 모델을 찾는 방향으로 모델링을 해야겠다.
