@@ -1,0 +1,1037 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "Untitled6.ipynb",
+      "provenance": [],
+      "authorship_tag": "ABX9TyMWW3ody1V5cZ68MwGPrfvn",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/moch1996/Vaycold/blob/main/Python_DataAnalysis/%20%EA%B3%B5%EC%A0%95%EB%8D%B0%EC%9D%B4%ED%84%B0\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "mCrTGTfyIJqC"
+      },
+      "source": [
+        "## 라이브러리"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "5o4UZlEJIGkq"
+      },
+      "source": [
+        "import os\n",
+        "import pandas as pd\n",
+        "import numpy as np\n",
+        "import matplotlib.pyplot as plt\n",
+        "import seaborn as sns\n",
+        "import tensorflow as tf\n",
+        "\n",
+        "from google.colab import drive"
+      ],
+      "execution_count": 1,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "GB1iA-JPIcSz",
+        "outputId": "e15f7c53-582c-4147-d38b-45d0d0ec6f27"
+      },
+      "source": [
+        "drive.mount('/content/Drive')"
+      ],
+      "execution_count": 4,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "Mounted at /content/Drive\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "aoCEXfxTI6VI",
+        "outputId": "bac081cf-6af3-4d66-9dcd-a1893c7a23b2"
+      },
+      "source": [
+        "os.chdir('/content/')  \n",
+        "path = ('Drive/MyDrive/fastcampus/MachineLearning_300/Part 3 - 머신러닝과 패턴인식/Chapter 1. 철판 제조 공정 데이터를 활용한 분류모형 생성 및 성능 비교/data')\n",
+        "file_list = os.listdir(path)\n",
+        "print( file_list)"
+      ],
+      "execution_count": 10,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "['Faults.NNA', 'Faults27x7_var']\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 35
+        },
+        "id": "AQzYKMVRLiIY",
+        "outputId": "76e7138c-e981-41f8-83e7-368bdba366ab"
+      },
+      "source": [
+        "file_list[1]"
+      ],
+      "execution_count": 19,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "application/vnd.google.colaboratory.intrinsic+json": {
+              "type": "string"
+            },
+            "text/plain": [
+              "'Faults27x7_var'"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 19
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "7dksejuvJ88j"
+      },
+      "source": [
+        "# workind directory 설정\n",
+        "os.chdir('/content/' + path)"
+      ],
+      "execution_count": 16,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 215
+        },
+        "id": "l02E1QKKLDw0",
+        "outputId": "ff3745cd-3f9f-4961-89cb-c78b6aaa70ec"
+      },
+      "source": [
+        "df = pd.read_csv(file_list[0], delimiter = '\\t', header=None)\n",
+        "df.head()"
+      ],
+      "execution_count": 33,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>0</th>\n",
+              "      <th>1</th>\n",
+              "      <th>2</th>\n",
+              "      <th>3</th>\n",
+              "      <th>4</th>\n",
+              "      <th>5</th>\n",
+              "      <th>6</th>\n",
+              "      <th>7</th>\n",
+              "      <th>8</th>\n",
+              "      <th>9</th>\n",
+              "      <th>10</th>\n",
+              "      <th>11</th>\n",
+              "      <th>12</th>\n",
+              "      <th>13</th>\n",
+              "      <th>14</th>\n",
+              "      <th>15</th>\n",
+              "      <th>16</th>\n",
+              "      <th>17</th>\n",
+              "      <th>18</th>\n",
+              "      <th>19</th>\n",
+              "      <th>20</th>\n",
+              "      <th>21</th>\n",
+              "      <th>22</th>\n",
+              "      <th>23</th>\n",
+              "      <th>24</th>\n",
+              "      <th>25</th>\n",
+              "      <th>26</th>\n",
+              "      <th>27</th>\n",
+              "      <th>28</th>\n",
+              "      <th>29</th>\n",
+              "      <th>30</th>\n",
+              "      <th>31</th>\n",
+              "      <th>32</th>\n",
+              "      <th>33</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>0</th>\n",
+              "      <td>42</td>\n",
+              "      <td>50</td>\n",
+              "      <td>270900</td>\n",
+              "      <td>270944</td>\n",
+              "      <td>267</td>\n",
+              "      <td>17</td>\n",
+              "      <td>44</td>\n",
+              "      <td>24220</td>\n",
+              "      <td>76</td>\n",
+              "      <td>108</td>\n",
+              "      <td>1687</td>\n",
+              "      <td>1</td>\n",
+              "      <td>0</td>\n",
+              "      <td>80</td>\n",
+              "      <td>0.0498</td>\n",
+              "      <td>0.2415</td>\n",
+              "      <td>0.1818</td>\n",
+              "      <td>0.0047</td>\n",
+              "      <td>0.4706</td>\n",
+              "      <td>1.0000</td>\n",
+              "      <td>1.0</td>\n",
+              "      <td>2.4265</td>\n",
+              "      <td>0.9031</td>\n",
+              "      <td>1.6435</td>\n",
+              "      <td>0.8182</td>\n",
+              "      <td>-0.2913</td>\n",
+              "      <td>0.5822</td>\n",
+              "      <td>1</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>1</th>\n",
+              "      <td>645</td>\n",
+              "      <td>651</td>\n",
+              "      <td>2538079</td>\n",
+              "      <td>2538108</td>\n",
+              "      <td>108</td>\n",
+              "      <td>10</td>\n",
+              "      <td>30</td>\n",
+              "      <td>11397</td>\n",
+              "      <td>84</td>\n",
+              "      <td>123</td>\n",
+              "      <td>1687</td>\n",
+              "      <td>1</td>\n",
+              "      <td>0</td>\n",
+              "      <td>80</td>\n",
+              "      <td>0.7647</td>\n",
+              "      <td>0.3793</td>\n",
+              "      <td>0.2069</td>\n",
+              "      <td>0.0036</td>\n",
+              "      <td>0.6000</td>\n",
+              "      <td>0.9667</td>\n",
+              "      <td>1.0</td>\n",
+              "      <td>2.0334</td>\n",
+              "      <td>0.7782</td>\n",
+              "      <td>1.4624</td>\n",
+              "      <td>0.7931</td>\n",
+              "      <td>-0.1756</td>\n",
+              "      <td>0.2984</td>\n",
+              "      <td>1</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2</th>\n",
+              "      <td>829</td>\n",
+              "      <td>835</td>\n",
+              "      <td>1553913</td>\n",
+              "      <td>1553931</td>\n",
+              "      <td>71</td>\n",
+              "      <td>8</td>\n",
+              "      <td>19</td>\n",
+              "      <td>7972</td>\n",
+              "      <td>99</td>\n",
+              "      <td>125</td>\n",
+              "      <td>1623</td>\n",
+              "      <td>1</td>\n",
+              "      <td>0</td>\n",
+              "      <td>100</td>\n",
+              "      <td>0.9710</td>\n",
+              "      <td>0.3426</td>\n",
+              "      <td>0.3333</td>\n",
+              "      <td>0.0037</td>\n",
+              "      <td>0.7500</td>\n",
+              "      <td>0.9474</td>\n",
+              "      <td>1.0</td>\n",
+              "      <td>1.8513</td>\n",
+              "      <td>0.7782</td>\n",
+              "      <td>1.2553</td>\n",
+              "      <td>0.6667</td>\n",
+              "      <td>-0.1228</td>\n",
+              "      <td>0.2150</td>\n",
+              "      <td>1</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>3</th>\n",
+              "      <td>853</td>\n",
+              "      <td>860</td>\n",
+              "      <td>369370</td>\n",
+              "      <td>369415</td>\n",
+              "      <td>176</td>\n",
+              "      <td>13</td>\n",
+              "      <td>45</td>\n",
+              "      <td>18996</td>\n",
+              "      <td>99</td>\n",
+              "      <td>126</td>\n",
+              "      <td>1353</td>\n",
+              "      <td>0</td>\n",
+              "      <td>1</td>\n",
+              "      <td>290</td>\n",
+              "      <td>0.7287</td>\n",
+              "      <td>0.4413</td>\n",
+              "      <td>0.1556</td>\n",
+              "      <td>0.0052</td>\n",
+              "      <td>0.5385</td>\n",
+              "      <td>1.0000</td>\n",
+              "      <td>1.0</td>\n",
+              "      <td>2.2455</td>\n",
+              "      <td>0.8451</td>\n",
+              "      <td>1.6532</td>\n",
+              "      <td>0.8444</td>\n",
+              "      <td>-0.1568</td>\n",
+              "      <td>0.5212</td>\n",
+              "      <td>1</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>4</th>\n",
+              "      <td>1289</td>\n",
+              "      <td>1306</td>\n",
+              "      <td>498078</td>\n",
+              "      <td>498335</td>\n",
+              "      <td>2409</td>\n",
+              "      <td>60</td>\n",
+              "      <td>260</td>\n",
+              "      <td>246930</td>\n",
+              "      <td>37</td>\n",
+              "      <td>126</td>\n",
+              "      <td>1353</td>\n",
+              "      <td>0</td>\n",
+              "      <td>1</td>\n",
+              "      <td>185</td>\n",
+              "      <td>0.0695</td>\n",
+              "      <td>0.4486</td>\n",
+              "      <td>0.0662</td>\n",
+              "      <td>0.0126</td>\n",
+              "      <td>0.2833</td>\n",
+              "      <td>0.9885</td>\n",
+              "      <td>1.0</td>\n",
+              "      <td>3.3818</td>\n",
+              "      <td>1.2305</td>\n",
+              "      <td>2.4099</td>\n",
+              "      <td>0.9338</td>\n",
+              "      <td>-0.1992</td>\n",
+              "      <td>1.0000</td>\n",
+              "      <td>1</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>"
+            ],
+            "text/plain": [
+              "     0     1        2        3     4   5    6   ...  27  28  29  30  31  32  33\n",
+              "0    42    50   270900   270944   267  17   44  ...   1   0   0   0   0   0   0\n",
+              "1   645   651  2538079  2538108   108  10   30  ...   1   0   0   0   0   0   0\n",
+              "2   829   835  1553913  1553931    71   8   19  ...   1   0   0   0   0   0   0\n",
+              "3   853   860   369370   369415   176  13   45  ...   1   0   0   0   0   0   0\n",
+              "4  1289  1306   498078   498335  2409  60  260  ...   1   0   0   0   0   0   0\n",
+              "\n",
+              "[5 rows x 34 columns]"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 33
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 195
+        },
+        "id": "kXQI97WzLp5d",
+        "outputId": "0d328b33-7607-45d1-94cd-0d1d28f1e690"
+      },
+      "source": [
+        "# 요게 컬럼명인 파일이넹\n",
+        "attributes_name = pd.read_csv(file_list[1], delimiter = ' ',header=None)\n",
+        "attributes_name.head()"
+      ],
+      "execution_count": 34,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>0</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>0</th>\n",
+              "      <td>X_Minimum</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>1</th>\n",
+              "      <td>X_Maximum</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2</th>\n",
+              "      <td>Y_Minimum</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>3</th>\n",
+              "      <td>Y_Maximum</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>4</th>\n",
+              "      <td>Pixels_Areas</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>"
+            ],
+            "text/plain": [
+              "              0\n",
+              "0     X_Minimum\n",
+              "1     X_Maximum\n",
+              "2     Y_Minimum\n",
+              "3     Y_Maximum\n",
+              "4  Pixels_Areas"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 34
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "w_v4Flv2L8gW",
+        "outputId": "88d88fc0-8252-4a99-c730-d5a4815765c3"
+      },
+      "source": [
+        "# 데이터 프레임에 0~33인 컬럼명을 저 데이터프레임으로 바꾸자\n",
+        "attributes_name[0].values"
+      ],
+      "execution_count": 27,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "array(['X_Minimum', 'X_Maximum', 'Y_Minimum', 'Y_Maximum', 'Pixels_Areas',\n",
+              "       'X_Perimeter', 'Y_Perimeter', 'Sum_of_Luminosity',\n",
+              "       'Minimum_of_Luminosity', 'Maximum_of_Luminosity',\n",
+              "       'Length_of_Conveyer', 'TypeOfSteel_A300', 'TypeOfSteel_A400',\n",
+              "       'Steel_Plate_Thickness', 'Edges_Index', 'Empty_Index',\n",
+              "       'Square_Index', 'Outside_X_Index', 'Edges_X_Index',\n",
+              "       'Edges_Y_Index', 'Outside_Global_Index', 'LogOfAreas',\n",
+              "       'Log_X_Index', 'Log_Y_Index', 'Orientation_Index',\n",
+              "       'Luminosity_Index', 'SigmoidOfAreas', 'Pastry', 'Z_Scratch',\n",
+              "       'K_Scatch', 'Stains', 'Dirtiness', 'Bumps', 'Other_Faults'],\n",
+              "      dtype=object)"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 27
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 215
+        },
+        "id": "TYQpE6x4L-at",
+        "outputId": "eb62fc03-1def-49f4-e29f-e3a5e2dd0a2d"
+      },
+      "source": [
+        "df.columns = attributes_name[0].values #values를 안넣어도 무관하긴하다\n",
+        "df.head() "
+      ],
+      "execution_count": 35,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/html": [
+              "<div>\n",
+              "<style scoped>\n",
+              "    .dataframe tbody tr th:only-of-type {\n",
+              "        vertical-align: middle;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe tbody tr th {\n",
+              "        vertical-align: top;\n",
+              "    }\n",
+              "\n",
+              "    .dataframe thead th {\n",
+              "        text-align: right;\n",
+              "    }\n",
+              "</style>\n",
+              "<table border=\"1\" class=\"dataframe\">\n",
+              "  <thead>\n",
+              "    <tr style=\"text-align: right;\">\n",
+              "      <th></th>\n",
+              "      <th>X_Minimum</th>\n",
+              "      <th>X_Maximum</th>\n",
+              "      <th>Y_Minimum</th>\n",
+              "      <th>Y_Maximum</th>\n",
+              "      <th>Pixels_Areas</th>\n",
+              "      <th>X_Perimeter</th>\n",
+              "      <th>Y_Perimeter</th>\n",
+              "      <th>Sum_of_Luminosity</th>\n",
+              "      <th>Minimum_of_Luminosity</th>\n",
+              "      <th>Maximum_of_Luminosity</th>\n",
+              "      <th>Length_of_Conveyer</th>\n",
+              "      <th>TypeOfSteel_A300</th>\n",
+              "      <th>TypeOfSteel_A400</th>\n",
+              "      <th>Steel_Plate_Thickness</th>\n",
+              "      <th>Edges_Index</th>\n",
+              "      <th>Empty_Index</th>\n",
+              "      <th>Square_Index</th>\n",
+              "      <th>Outside_X_Index</th>\n",
+              "      <th>Edges_X_Index</th>\n",
+              "      <th>Edges_Y_Index</th>\n",
+              "      <th>Outside_Global_Index</th>\n",
+              "      <th>LogOfAreas</th>\n",
+              "      <th>Log_X_Index</th>\n",
+              "      <th>Log_Y_Index</th>\n",
+              "      <th>Orientation_Index</th>\n",
+              "      <th>Luminosity_Index</th>\n",
+              "      <th>SigmoidOfAreas</th>\n",
+              "      <th>Pastry</th>\n",
+              "      <th>Z_Scratch</th>\n",
+              "      <th>K_Scatch</th>\n",
+              "      <th>Stains</th>\n",
+              "      <th>Dirtiness</th>\n",
+              "      <th>Bumps</th>\n",
+              "      <th>Other_Faults</th>\n",
+              "    </tr>\n",
+              "  </thead>\n",
+              "  <tbody>\n",
+              "    <tr>\n",
+              "      <th>0</th>\n",
+              "      <td>42</td>\n",
+              "      <td>50</td>\n",
+              "      <td>270900</td>\n",
+              "      <td>270944</td>\n",
+              "      <td>267</td>\n",
+              "      <td>17</td>\n",
+              "      <td>44</td>\n",
+              "      <td>24220</td>\n",
+              "      <td>76</td>\n",
+              "      <td>108</td>\n",
+              "      <td>1687</td>\n",
+              "      <td>1</td>\n",
+              "      <td>0</td>\n",
+              "      <td>80</td>\n",
+              "      <td>0.0498</td>\n",
+              "      <td>0.2415</td>\n",
+              "      <td>0.1818</td>\n",
+              "      <td>0.0047</td>\n",
+              "      <td>0.4706</td>\n",
+              "      <td>1.0000</td>\n",
+              "      <td>1.0</td>\n",
+              "      <td>2.4265</td>\n",
+              "      <td>0.9031</td>\n",
+              "      <td>1.6435</td>\n",
+              "      <td>0.8182</td>\n",
+              "      <td>-0.2913</td>\n",
+              "      <td>0.5822</td>\n",
+              "      <td>1</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>1</th>\n",
+              "      <td>645</td>\n",
+              "      <td>651</td>\n",
+              "      <td>2538079</td>\n",
+              "      <td>2538108</td>\n",
+              "      <td>108</td>\n",
+              "      <td>10</td>\n",
+              "      <td>30</td>\n",
+              "      <td>11397</td>\n",
+              "      <td>84</td>\n",
+              "      <td>123</td>\n",
+              "      <td>1687</td>\n",
+              "      <td>1</td>\n",
+              "      <td>0</td>\n",
+              "      <td>80</td>\n",
+              "      <td>0.7647</td>\n",
+              "      <td>0.3793</td>\n",
+              "      <td>0.2069</td>\n",
+              "      <td>0.0036</td>\n",
+              "      <td>0.6000</td>\n",
+              "      <td>0.9667</td>\n",
+              "      <td>1.0</td>\n",
+              "      <td>2.0334</td>\n",
+              "      <td>0.7782</td>\n",
+              "      <td>1.4624</td>\n",
+              "      <td>0.7931</td>\n",
+              "      <td>-0.1756</td>\n",
+              "      <td>0.2984</td>\n",
+              "      <td>1</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>2</th>\n",
+              "      <td>829</td>\n",
+              "      <td>835</td>\n",
+              "      <td>1553913</td>\n",
+              "      <td>1553931</td>\n",
+              "      <td>71</td>\n",
+              "      <td>8</td>\n",
+              "      <td>19</td>\n",
+              "      <td>7972</td>\n",
+              "      <td>99</td>\n",
+              "      <td>125</td>\n",
+              "      <td>1623</td>\n",
+              "      <td>1</td>\n",
+              "      <td>0</td>\n",
+              "      <td>100</td>\n",
+              "      <td>0.9710</td>\n",
+              "      <td>0.3426</td>\n",
+              "      <td>0.3333</td>\n",
+              "      <td>0.0037</td>\n",
+              "      <td>0.7500</td>\n",
+              "      <td>0.9474</td>\n",
+              "      <td>1.0</td>\n",
+              "      <td>1.8513</td>\n",
+              "      <td>0.7782</td>\n",
+              "      <td>1.2553</td>\n",
+              "      <td>0.6667</td>\n",
+              "      <td>-0.1228</td>\n",
+              "      <td>0.2150</td>\n",
+              "      <td>1</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>3</th>\n",
+              "      <td>853</td>\n",
+              "      <td>860</td>\n",
+              "      <td>369370</td>\n",
+              "      <td>369415</td>\n",
+              "      <td>176</td>\n",
+              "      <td>13</td>\n",
+              "      <td>45</td>\n",
+              "      <td>18996</td>\n",
+              "      <td>99</td>\n",
+              "      <td>126</td>\n",
+              "      <td>1353</td>\n",
+              "      <td>0</td>\n",
+              "      <td>1</td>\n",
+              "      <td>290</td>\n",
+              "      <td>0.7287</td>\n",
+              "      <td>0.4413</td>\n",
+              "      <td>0.1556</td>\n",
+              "      <td>0.0052</td>\n",
+              "      <td>0.5385</td>\n",
+              "      <td>1.0000</td>\n",
+              "      <td>1.0</td>\n",
+              "      <td>2.2455</td>\n",
+              "      <td>0.8451</td>\n",
+              "      <td>1.6532</td>\n",
+              "      <td>0.8444</td>\n",
+              "      <td>-0.1568</td>\n",
+              "      <td>0.5212</td>\n",
+              "      <td>1</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "    </tr>\n",
+              "    <tr>\n",
+              "      <th>4</th>\n",
+              "      <td>1289</td>\n",
+              "      <td>1306</td>\n",
+              "      <td>498078</td>\n",
+              "      <td>498335</td>\n",
+              "      <td>2409</td>\n",
+              "      <td>60</td>\n",
+              "      <td>260</td>\n",
+              "      <td>246930</td>\n",
+              "      <td>37</td>\n",
+              "      <td>126</td>\n",
+              "      <td>1353</td>\n",
+              "      <td>0</td>\n",
+              "      <td>1</td>\n",
+              "      <td>185</td>\n",
+              "      <td>0.0695</td>\n",
+              "      <td>0.4486</td>\n",
+              "      <td>0.0662</td>\n",
+              "      <td>0.0126</td>\n",
+              "      <td>0.2833</td>\n",
+              "      <td>0.9885</td>\n",
+              "      <td>1.0</td>\n",
+              "      <td>3.3818</td>\n",
+              "      <td>1.2305</td>\n",
+              "      <td>2.4099</td>\n",
+              "      <td>0.9338</td>\n",
+              "      <td>-0.1992</td>\n",
+              "      <td>1.0000</td>\n",
+              "      <td>1</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "      <td>0</td>\n",
+              "    </tr>\n",
+              "  </tbody>\n",
+              "</table>\n",
+              "</div>"
+            ],
+            "text/plain": [
+              "   X_Minimum  X_Maximum  Y_Minimum  ...  Dirtiness  Bumps  Other_Faults\n",
+              "0         42         50     270900  ...          0      0             0\n",
+              "1        645        651    2538079  ...          0      0             0\n",
+              "2        829        835    1553913  ...          0      0             0\n",
+              "3        853        860     369370  ...          0      0             0\n",
+              "4       1289       1306     498078  ...          0      0             0\n",
+              "\n",
+              "[5 rows x 34 columns]"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 35
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "5d9LILTSMnet",
+        "outputId": "8a7450e4-b4af-4e28-9098-90c7b095d272"
+      },
+      "source": [
+        "df.shape"
+      ],
+      "execution_count": 36,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "(1941, 34)"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 36
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "XyMOTIApZYU5"
+      },
+      "source": [
+        "# cpu 갯수\n",
+        "n_cpu = os.cpu_count()\n",
+        "n_thread = n_cpu * 2"
+      ],
+      "execution_count": 38,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "ABgFHHU9Z4VR"
+      },
+      "source": [
+        "## EDA 및 PreProcessing"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "4nZJdoAge69s"
+      },
+      "source": [
+        "### 종속변수를 범주화 하자"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "osrbk3iybLNo"
+      },
+      "source": [
+        "conditions = [df['Pastry'].astype(bool),\n",
+        "              df['Z_Scratch'].astype(bool),\n",
+        "              df['K_Scatch'].astype(bool),\n",
+        "              df['Stains'].astype(bool),\n",
+        "              df['Dirtiness'].astype(bool),\n",
+        "              df['Bumps'].astype(bool),\n",
+        "              df['Other_Faults'].astype(bool)]"
+      ],
+      "execution_count": 50,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "DMt39LTWdBCM"
+      },
+      "source": [
+        "conditions"
+      ],
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "-2pLwnV6bja_"
+      },
+      "source": [
+        "# 이 방법으로 하는 것을 더 추천\n",
+        "condition_bf = [\n",
+        "                df['Pastry'],\n",
+        "                df['Z_Scratch'],\n",
+        "                df['K_Scatch'],\n",
+        "                df['Stains'],\n",
+        "                df['Dirtiness'],\n",
+        "                df['Bumps'],\n",
+        "                df['Other_Faults'],\n",
+        "] # 이렇게하면 pastry는 0번째 series, Z_scatch는 1번째 series, ... , otehr_Faults는 마지막 series가 된다.\n",
+        "\n",
+        "conditions = list(map(lambda x : x.astype(bool), conditions))"
+      ],
+      "execution_count": 72,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "3dD00deAdhlC",
+        "outputId": "96d230c4-6dbb-4fc9-99ff-b504c5fa976c"
+      },
+      "source": [
+        "conditions[0] # True ,False로 이루어진 Series가 list로 구성됌"
+      ],
+      "execution_count": 75,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "0        True\n",
+              "1        True\n",
+              "2        True\n",
+              "3        True\n",
+              "4        True\n",
+              "        ...  \n",
+              "1936    False\n",
+              "1937    False\n",
+              "1938    False\n",
+              "1939    False\n",
+              "1940    False\n",
+              "Name: Pastry, Length: 1941, dtype: bool"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 75
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "4A44lWiadpDx",
+        "outputId": "4574ed11-7150-4786-dad3-214f59b76b0c"
+      },
+      "source": [
+        "print(type(conditions))\n",
+        "print(type(conditions[0]))\n",
+        "print(len(conditions))\n",
+        "print(len(conditions[0]))"
+      ],
+      "execution_count": 79,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "<class 'list'>\n",
+            "<class 'pandas.core.series.Series'>\n",
+            "7\n",
+            "1941\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "lokv-FxKetXr"
+      },
+      "source": [
+        "choice = ['Pastry', 'Z_Scratch', 'K_Scatch', 'Stains',\n",
+        "       'Dirtiness', 'Bumps', 'Other_Faults']"
+      ],
+      "execution_count": 81,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "lniYKskMfPBF"
+      },
+      "source": [
+        "df['class'] = np.select(conditions, choice) # 이건 돌면서 "
+      ],
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
