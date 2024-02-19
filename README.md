@@ -30,10 +30,10 @@ python defense.py --device 0 --workers 0 --batch_size 16 --data data/custom.yaml
 |Defense|Dataset|mAP_50|Dataset|mAP_50|Dataset|mAP_50|
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 |No Defense|COCO|0.487|VISDRONE|0.209|ARGOVERSE|0.362|
-|[FQ](www.naver.com)|COCO|0.486|VISDRONE|0.210|ARGOVERSE|0.370|
-|[JPEG](www.naver.com)|COCO|0.426|VISDRONE|0.136|ARGOVERSE|0.264|
-|[LGS](www.naver.com)|COCO|0.425|VISDRONE|0.163|ARGOVERSE|0.335|
-|[SAC](www.naver.com)|COCO|0.490|VISDRONE|0.215|ARGOVERSE|0.390|
+|[FQ](http://www.naver.com)|COCO|0.486|VISDRONE|0.210|ARGOVERSE|0.370|
+|[JPEG](http://www.naver.com)|COCO|0.426|VISDRONE|0.136|ARGOVERSE|0.264|
+|[LGS](http://www.naver.com)|COCO|0.425|VISDRONE|0.163|ARGOVERSE|0.335|
+|[SAC](http://www.naver.com)|COCO|0.490|VISDRONE|0.215|ARGOVERSE|0.390|
 |**OD-SHIELD**|COCO|**0.563**|VISDRONE|**0.307**|ARGOVERSE|**0.425**|
 
 
