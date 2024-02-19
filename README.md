@@ -9,26 +9,44 @@ OD-SHEILD를 학습하기 위해 총 3가지의 데이터셋(COCO DATASET, VISDR
 ## Training 
 OD-SHILED는 train.py를 통해 각기 다른 argument를 추가함으로써 실험의 다양성을 제공한다. 데이터셋의 이미지 파일 경로와, 라벨 파일의 경로는 각각 --data_path, --label_path 뒤에 인자로 받는다. 뿐만 아니라 데이터셋에 대한 배치사이즈, 학습률, 반복수는 --bs, --lr, --epochs 뒤의 인자로 주어 각각의 환경에 맞게끔 실험을 실시할 수 있다. 학습된 모형은 --checkpoint_path 경로로 저장이 되며, 기본적으로 100번의 반복마다 모델 학습이 저장된다. 해당 모형이 학습되는 과정을 텐서보드로 시각화를 하고 싶다면 --visualize 값을 준 후 --log_path에서 해당 학습 기록을 로그파일 형식으로 받아볼 수 있다. 
 
-## Patchs
-OD-SHILED는 여러 가지 패치를 학습에 사용한다. 해당 패치들의 경로는 ./패치 이며 여기에 있는 패치들을 무작위로 선택하여 학습에 사용된다. 사용자는 학습에 사용될 커스텀 패치가 따로 있을 경우, train.py 의 --patch_paths 경로에 커스텀된 패치들의 경로를 넣어주면 된다.다음은 예시 학습코드 파일이다. 
+## Patch
+OD-SHILED는 여러 가지 적대적 패치를 학습에 사용한다. 해당 패치들의 경로는 ./패치 이며 여기에 있는 패치들을 무작위로 선택하여 학습에 사용된다. 사용자는 학습에 사용될 커스텀 패치가 따로 있을 경우, train.py 의 --patch_paths 경로에 커스텀된 패치들의 경로를 넣어주면 된다.다음은 예시 학습코드 파일이다. 
 
 ```
-train.py --bs 16 --lr 0.001 --epochs 1200 --gpu_id 0
+train.py --bs 16 --lr 0.001 --epochs 1200 --gpu_id 0 --checkpoint_path ./checkpoints --log_path ./logs --visualize --data_path ./XXXX/images --label_path ./XXXX/labels --patch_paths ./패치 
 ```
-    parser.add_argument('--bs', action='store', type=int, default = 2, required=False)
-    parser.add_argument('--lr', action='store', type=float, default = 0.0001, required=False)
-    parser.add_argument('--epochs', action='store', type=int, default = 700, required=False)
-    parser.add_argument('--gpu_id', action='store', type=int, default=0, required=False)
-    
-    parser.add_argument('--checkpoint_path', action='store', type=str, default = './checkpoints/', required=False)
-    parser.add_argument('--log_path', action='store', type=str, default = './logs/', required=False)
-    parser.add_argument('--visualize', action='store_true')
-    
-    parser.add_argument('--data_path', default='/Data1/hm/DRAEM_TRAIN_DATASET/argoverse/images') # modify the dataset images path
-    parser.add_argument('--label_path', default='/Data1/hm/DRAEM_TRAIN_DATASET/argoverse/labels') # modify the dataset labels path
-    parser.add_argument('--patch_paths', default='/Data1/hm/OD_SHIELD/yolov5_adversarial/patch/patch_sample') 
+---
+## Evaluating
+학습된 OD-SHILED의 성능을 비교하기 위해서는 `defense.py` 를 실행해주면 된다. 이 때 --od_shiled 인자를 추가하여야 OD-shiled가 적용이 된 상태로의 객체탐지가 실시된다. 따라서 해당 인자를 주지 않을 경우 적대적 공격이 들어왔을 때의 모형이 얼마만큼 공격받는 지를 확인할 수 있으며, 해당 인자를 주었을 때 얼마만큼 공격을 효과적으로 막아내는 지 확인할 수 있다. 
+```
 
-    args = parser.parse_args()
+# 1. Adversarial Patch Attack
+python defense.py --device 0 --workers 0 --batch_size 16 --data data/custom.yaml --weights 데이터셋에따른디텍트/best.pt --model_path [모델경로]
 
-    with torch.cuda.device(args.gpu_id):
-        train_on_device(args)
+# 2. Adversarial Patch Attack Defense
+python defense.py --device 0 --workers 0 --batch_size 16 --data data/custom.yaml --weights 데이터셋에따른디텍트/best.pt --od_shiled
+
+```
+|Defense|Dataset|mAP_50|Dataset|mAP_50|Dataset|mAP_50|
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+|No Defense|COCO|0.487|VISDRONE|0.487|ARGOVERSE|0.487|
+|[FQ](www.naver.com)|COCO|0.486|VISDRONE|0.487|ARGOVERSE|0.487|
+|[JPEG](www.naver.com)|COCO|0.426|VISDRONE|0.487|ARGOVERSE|0.487|
+|[LGS](www.naver.com)|COCO|0.425|VISDRONE|0.487|ARGOVERSE|0.487|
+|[SAC](www.naver.com)|COCO|0.490|VISDRONE|0.487|ARGOVERSE|0.487|
+|**OD-SHIELD**|COCO|**0.563**|VISDRONE|0.487|ARGOVERSE|0.487|
+
+|Defense|Dataset|mAP_50|
+|:---:|:---:|:---:|
+|No Defense|COCO|0.487|
+|[FQ](www.naver.com)|COCO|0.486|
+|[JPEG](www.naver.com)|COCO|0.426|
+|[LGS](www.naver.com)|COCO|0.425|
+|[SAC](www.naver.com)|COCO|0.490|
+|**OD-SHIELD**|COCO|**0.563**|
+
+
+
+
+
+
