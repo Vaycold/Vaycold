@@ -45,22 +45,21 @@ python defense.py --device 0 --workers 0 --batch_size 16 --data data/custom.yaml
 
 |Module|Loss|Metric:SSIM|Metric:PSNR|
 |:---:|:---:|:---:|:---:|
-|SSPCAB|L2|0.8143|21.7112|
+|SSPCAB|L2|0.7943|21.7112|
 |SSPCAB|L2+SSIM|0.8133|20.6181|
 |SSPCAB|L2+SSIM+Perceptual|0.8189|22.6475|
 
 |Module|Loss|Metric:SSIM|Metric:PSNR|
 |:---:|:---:|:---:|:---:|
-|SSMCTB|L2|0.8001|22.3199|
+|SSMCTB|L2|0.7801|22.3199|
 |SSMCTB|L2+SSIM|0.8012|22.1127|
-|SSMCTB|L2+SSIM+Perceptual|0.8074|23.5545|
+|SSMCTB|L2+SSIM+Perceptual|0.814|23.5545|
 
 |Module|Loss|Metric:SSIM|Metric:PSNR|
 |:---:|:---:|:---:|:---:|
-|SSCBAM|L2+SSIM|0.8431|VISDRONE|
-|SSCBAM|L2+SSIM+PSNR|0.8391|COCO|
-|SSCBAM|L2+SSIM+Perceptual|0.8431|25.2231|
+|SSCBAM|L2+SSIM|0.8333|VISDRONE|
+|SSCBAM|L2+SSIM+PSNR|0.8351|COCO|
+|SSCBAM|L2+SSIM+Perceptual|0.8498|25.2231|
 
 논문의 Appendix에서 보인 모듈간 실험을 loss function 간 ablation study를 진행했었던 결과는 위와 같다. L2 loss, ssim loss, perceptual loss 총 3가지 loss를 사용하여 loss를 하나씩 추가하며 성능을 측정하였다.
-Argoverse Dataset을 사용하여 모형학습을 진행하였으며, Appendix와는 다르게 visdrone dataset
-논문에서 언급했던 3가지 loss function에 대해 ablation study를 실시한 결과이다. Argoverse Dataset으로 모형을 학습하고, visdrone 데이터셋을 통해 모듈 간 SSIM, PSNR값을 측정한 결과는 위와 같다.
+Argoverse Dataset을 사용하여 모형학습을 진행하였으며, Appendix와는 다르게 visdrone dataset를 사용하여 inference를 진행하였다. argoverse dataset으로 inference 했을 때와는 다르게 모듈 간 metric 성능차이가 존재함을 확인할 수 있었으며, 모든 모듈에서 3가지 loss를 전부 사용하였을 때 평가 metric의 값이 가장 높았음을 확인할 수 있었다.
