@@ -57,8 +57,8 @@ python defense.py --device 0 --workers 0 --batch_size 16 --data data/custom.yaml
 
 |Module|Loss|Metric:SSIM|Metric:PSNR|
 |:---:|:---:|:---:|:---:|
-|SSCBAM|L2+SSIM|0.8333|VISDRONE|
-|SSCBAM|L2+SSIM+PSNR|0.8351|COCO|
+|SSCBAM|L2|0.8333|23.5511|
+|SSCBAM|L2+SSIM|0.8351|23.4176|
 |SSCBAM|L2+SSIM+Perceptual|0.8498|25.2231|
 
 논문의 Appendix에서 보인 모듈간 실험을 loss function 간 ablation study를 진행했었던 결과는 위와 같다. L2 loss, ssim loss, perceptual loss 총 3가지 loss를 사용하여 loss를 하나씩 추가하며 성능을 측정하였다.
